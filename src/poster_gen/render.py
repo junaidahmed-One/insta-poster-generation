@@ -9,7 +9,7 @@ import mimetypes
 import subprocess
 from pathlib import Path
 
-from .paths import ASSETS, OUT, ROOT, TEMPLATES, resolve
+from .paths import ASSETS, OUT, TEMPLATES, resolve
 
 CHROME = "/usr/bin/google-chrome"
 
@@ -69,14 +69,19 @@ def photo_aspect(path: Path) -> str:
     return f"{w}/{h}"
 
 
+def chip_rows(items: list[str]) -> str:
+    return "".join(
+        '<span class="chip"><i>%02d</i>%s</span>' % (i, label)
+        for i, label in enumerate(items, start=1)
+    )
+
+
 def index_rows(items: list[str]) -> str:
-    rows = []
-    for i, label in enumerate(items, start=1):
-        rows.append(
-            '<div class="idx-row"><span class="n">%02d</span>'
-            '<span class="t">%s</span></div>' % (i, label)
-        )
-    return "\n    ".join(rows)
+    return "\n    ".join(
+        '<div class="idx-row"><span class="n">%02d</span><span class="t">%s</span></div>'
+        % (i, label)
+        for i, label in enumerate(items, start=1)
+    )
 
 
 def tokens(spec: dict, style: dict) -> dict[str, str]:
@@ -84,10 +89,12 @@ def tokens(spec: dict, style: dict) -> dict[str, str]:
 
     roles = derive_roles(style)
     copy = spec.get("copy", {})
+    photo = photo_path(spec, style)
+
     t = {
         "FONTS": font_css(),
-        "PHOTO": data_uri(resolve(photo_path(spec, style))),
-        "PHOTO_AR": photo_aspect(resolve(photo_path(spec, style))),
+        "PHOTO": data_uri(photo),
+        "PHOTO_AR": photo_aspect(photo),
         "BLUE": style["bg"],
         "LIME": style["accent"],
         "NAVY": style["ink"],
@@ -101,6 +108,7 @@ def tokens(spec: dict, style: dict) -> dict[str, str]:
         "ON_ACCENT": roles["on_accent"],
         "SHADOW": roles["shadow"],
         "INDEX_ITEMS": index_rows(copy.get("index", [])),
+        "CHIPS": chip_rows(copy.get("index", [])),
     }
     for key, value in copy.items():
         if key == "index":
@@ -115,16 +123,8 @@ def fill(template: str, mapping: dict[str, str]) -> str:
     return template
 
 
-def render(spec_path: str | Path, style_path: str | Path | None = None,
-           scale: int = 2, out_name: str | None = None) -> Path:
-    spec_path = resolve(spec_path)
-    spec = json.loads(spec_path.read_text())
-
-    from .palette import load_style
-
-    style = load_style(resolve(style_path) if style_path else resolve(spec["style"]) if spec.get("style") else None)
-
-    template = (TEMPLATES / f"{spec.get('template', 'slide01')}.html").read_text()
+def render(spec: dict, style: dict, *, scale: int = 2, out_name: str | None = None) -> Path:
+    template = (TEMPLATES / f"{spec.get('template', 'slide_text')}.html").read_text()
     html = fill(template, tokens(spec, style))
 
     built = Path("/tmp/opencode/_built.html")
@@ -139,6 +139,7 @@ def render(spec_path: str | Path, style_path: str | Path | None = None,
     cmd = [
         CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars",
         "--no-sandbox", "--default-background-color=00000000",
+        "--virtual-time-budget=3000",
         f"--force-device-scale-factor={scale}",
         f"--window-size={w},{h}",
         f"--screenshot={out}",
@@ -150,6 +151,16 @@ def render(spec_path: str | Path, style_path: str | Path | None = None,
 
     _export_jpg(out, w, h)
     return out
+
+
+def render_file(spec_path: str | Path, style_path: str | Path | None = None,
+                scale: int = 2, out_name: str | None = None) -> Path:
+    from .palette import load_style
+
+    spec_path = resolve(spec_path)
+    spec = json.loads(spec_path.read_text())
+    style_file = resolve(style_path) if style_path else (resolve(spec["style"]) if spec.get("style") else None)
+    return render(spec, load_style(style_file), scale=scale, out_name=out_name)
 
 
 def _export_jpg(png: Path, w: int, h: int) -> None:

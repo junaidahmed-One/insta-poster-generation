@@ -1,0 +1,22 @@
+{
+  "name": "culture",
+  "label": "Design, brand & ideas",
+  "keywords": [
+    "art", "design", "designer", "culture", "brand", "branding", "story",
+    "stories", "creative", "film", "music", "history", "essay", "letter",
+    "identity", "craft", "type", "typography", "campaign", "audience", "taste"
+  ],
+  "palette": {
+    "bg": "#7A1F2B",
+    "accent": "#F0E3C2",
+    "ink": "#2A0A0E",
+    "paper": "#FBF3E4",
+    "text": "#FBF3E4"
+  },
+  "figure": {
+    "src": "assets/photos/c_Diocletien.jpg",
+    "crop": [0.08, 0.12, 0.92, 0.54],
+    "background": "dark"
+  },
+  "texture": { "grain": 0.34, "scanlines": 0.18 }
+}

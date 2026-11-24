@@ -1,0 +1,17 @@
+{
+  "name": "ref_synth",
+  "source": "/tmp/opencode/ref_synth.jpg",
+  "bg": "#EFE8D8",
+  "accent": "#D7332A",
+  "ink": "#141414",
+  "paper": "#EFE8D8",
+  "palette": [
+    "#EFE8D8",
+    "#141414",
+    "#D7332A",
+    "#2B5E4B",
+    "#C6BEB4"
+  ],
+  "grain": 0.161,
+  "scanlines": 0.22
+}

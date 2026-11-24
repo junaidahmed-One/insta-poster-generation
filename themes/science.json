@@ -1,0 +1,22 @@
+{
+  "name": "science",
+  "label": "Research & systems",
+  "keywords": [
+    "research", "science", "scientific", "experiment", "study", "climate",
+    "health", "biology", "physics", "space", "energy", "carbon", "medical",
+    "clinical", "lab", "evidence", "method", "hypothesis", "data set", "model risk"
+  ],
+  "palette": {
+    "bg": "#0E4A5C",
+    "accent": "#FFD166",
+    "ink": "#04161C",
+    "paper": "#EAF4F2",
+    "text": "#EAF4F2"
+  },
+  "figure": {
+    "src": "assets/photos/c_Diocletien.jpg",
+    "crop": [0.08, 0.12, 0.92, 0.54],
+    "background": "dark"
+  },
+  "texture": { "grain": 0.30, "scanlines": 0.30 }
+}

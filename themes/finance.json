@@ -1,0 +1,23 @@
+{
+  "name": "finance",
+  "label": "Money, growth & strategy",
+  "keywords": [
+    "money", "revenue", "pricing", "price", "cost", "costs", "margin", "finance",
+    "fund", "funding", "invest", "investor", "roi", "budget", "sales", "growth",
+    "profit", "market", "customer", "churn", "retention", "cac", "ltv", "raise",
+    "valuation", "cash", "spend", "business", "strategy"
+  ],
+  "palette": {
+    "bg": "#0C3B2E",
+    "accent": "#E9B23C",
+    "ink": "#04140F",
+    "paper": "#F4EEE1",
+    "text": "#F7F2E7"
+  },
+  "figure": {
+    "src": "assets/photos/c_Ciceron.jpg",
+    "crop": [0.08, 0.10, 0.92, 0.52],
+    "background": "dark"
+  },
+  "texture": { "grain": 0.24, "scanlines": 0.14 }
+}

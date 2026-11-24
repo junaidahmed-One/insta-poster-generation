@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<style>
+{{FONTS}}
+
+:root{
+  --blue:{{BLUE}};
+  --navy:{{NAVY}};
+  --paper:{{PAPER}};
+  --text:{{TEXT}};
+  --text-soft:{{TEXT_SOFT}};
+  --text-mute:{{TEXT_MUTE}};
+  --line:{{LINE}};
+  --on-accent:{{ON_ACCENT}};
+  --accent:{{LIME}};
+  --shadow:{{SHADOW}};
+  --w:1080px;
+  --h:1350px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:var(--w);height:var(--h);}
+body{
+  background:var(--blue);
+  font-family:"Barlow Condensed",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+.stage{
+  position:relative;width:var(--w);height:var(--h);overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 18% 8%, color-mix(in srgb, var(--blue) 76%, white) 0%, transparent 55%),
+    radial-gradient(100% 70% at 88% 92%, color-mix(in srgb, var(--blue) 55%, black) 0%, transparent 60%),
+    linear-gradient(168deg, color-mix(in srgb, var(--blue) 88%, white) 0%, var(--blue) 45%, color-mix(in srgb, var(--blue) 84%, black) 100%);
+}
+
+.grain{
+  position:absolute;inset:0;z-index:9;pointer-events:none;
+  opacity:{{GRAIN}};mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='240' height='240' filter='url(%23n)' opacity='.5'/></svg>");
+}
+.dots{
+  position:absolute;z-index:2;pointer-events:none;
+  left:-40px;bottom:150px;width:520px;height:560px;opacity:.28;
+  background-image:radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--text) 60%, transparent) 1.1px, transparent 1.4px);
+  background-size:9px 9px;
+  -webkit-mask-image:linear-gradient(120deg,#000 20%,transparent 78%);
+}
+.wires{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.5;}
+
+/* ---------- figure ---------- */
+.bust-wrap{
+  position:absolute;z-index:3;
+  right:-230px;bottom:-210px;
+  width:870px;aspect-ratio:{{PHOTO_AR}};
+}
+.bust-wrap img{width:100%;display:block;
+  filter:contrast(1.03) drop-shadow(0 26px 48px var(--shadow));
+}
+.scan{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,{{SCAN}}) 0 2px, rgba(0,0,0,0) 2px 7px);
+  -webkit-mask-image:url("{{PHOTO}}");
+  -webkit-mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat;
+  mix-blend-mode:multiply;
+}
+
+/* ---------- rail ---------- */
+.topbar{
+  position:absolute;z-index:8;left:60px;right:60px;top:52px;
+  display:flex;align-items:center;gap:16px;
+  font-size:19px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text-soft);
+}
+.topbar .brand{font-weight:700;}
+.topbar .rule{flex:1;height:1px;background:var(--line);}
+.topbar .stamp{
+  font-family:"Bebas Neue";font-size:20px;letter-spacing:.16em;
+  padding:5px 11px 4px;background:var(--accent);color:var(--on-accent);
+}
+
+/* ---------- copy ---------- */
+.copy{position:absolute;z-index:7;left:60px;top:150px;width:960px;
+  display:flex;flex-direction:column;gap:30px;}
+.kicker{
+  display:flex;align-items:center;gap:11px;
+  font-size:23px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);
+}
+.kicker .sq{width:11px;height:11px;background:var(--accent);display:block;}
+
+.title-box{position:relative;width:960px;height:436px;overflow:hidden;}
+.title{
+  font-family:"Anton";text-transform:uppercase;
+  font-size:190px;line-height:.88;letter-spacing:-.012em;
+  color:var(--text);text-wrap:balance;
+  text-shadow:0 8px 0 var(--shadow);
+}
+
+.deck{
+  position:relative;width:392px;
+  font-family:"Liberation Sans",Arial,sans-serif;
+  font-size:21px;line-height:1.58;
+  color:var(--text-soft);
+}
+.deck b{color:var(--text);font-weight:700;}
+
+/* ---------- chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;width:396px;}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 13px 5px;border:1.5px solid var(--line);
+  font-family:"Bebas Neue";font-size:17px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-soft);
+}
+.chip i{font-style:normal;font-size:14px;letter-spacing:.06em;color:var(--accent);}
+
+/* ---------- bar ---------- */
+.bar{
+  position:absolute;z-index:8;left:0;right:0;bottom:0;height:172px;
+  background:var(--navy);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 60px;gap:40px;
+}
+.bar .lead{
+  font-family:"Bebas Neue";font-size:33px;letter-spacing:.035em;
+  color:var(--paper);line-height:1.12;max-width:700px;
+}
+.bar .sub{
+  margin-top:9px;font-size:20px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;
+}
+.bar .swipe{
+  display:flex;align-items:center;gap:14px;flex:none;
+  font-family:"Bebas Neue";font-size:26px;letter-spacing:.2em;
+  color:var(--accent);text-transform:uppercase;
+}
+.bar .swipe .arrow{
+  width:64px;height:64px;border:2px solid var(--accent);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:Arial;font-size:26px;line-height:1;color:var(--accent);
+}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="dots"></div>
+
+  <svg class="wires" viewBox="0 0 1080 1350" fill="none">
+    <path d="M-40 470 C 210 300, 380 700, 640 560 S 980 250, 1160 420"
+          stroke="color-mix(in srgb, var(--text) 30%, transparent)" stroke-width="2.5"/>
+    <path d="M-60 760 C 180 620, 300 980, 560 900 S 900 640, 1140 780"
+          stroke="color-mix(in srgb, var(--text) 20%, transparent)" stroke-width="2"/>
+    <path d="M700 -40 C 720 240, 980 260, 960 520 S 760 760, 880 980"
+          stroke="color-mix(in srgb, var(--text) 16%, transparent)" stroke-width="1.6"/>
+  </svg>
+
+  <div class="bust-wrap">
+    <img src="{{PHOTO}}" alt="">
+    <div class="scan"></div>
+  </div>
+
+  <div class="topbar">
+    <div class="brand">{{RAIL_LEFT}}</div>
+    <div class="rule"></div>
+    <div>{{RAIL_MID}}</div>
+    <div class="stamp">{{STAMP}}</div>
+  </div>
+
+  <div class="copy">
+    <div class="kicker"><span class="sq"></span>{{KICKER}}</div>
+    <div class="title-box"><div class="title">{{TITLE}}</div></div>
+    <div class="deck">{{DECK}}</div>
+    <div class="chips">{{CHIPS}}</div>
+  </div>
+
+  <div class="bar">
+    <div>
+      <div class="lead">{{BAR_LEAD}}</div>
+      <div class="sub">{{BAR_SUB}}</div>
+    </div>
+    <div class="swipe">{{SWIPE}}<span class="arrow">→</span></div>
+  </div>
+
+  <div class="grain"></div>
+</div>
+
+<script>
+// Shrink the headline until it fits its box, then stop.
+// Runs after webfonts are ready so measurements are real.
+(function () {
+  var box = document.querySelector('.title-box');
+  var el = document.querySelector('.title');
+
+  function fit() {
+    var size = 210;
+    el.style.fontSize = size + 'px';
+    for (var i = 0; i < 220; i++) {
+      var overflow = el.scrollHeight > box.clientHeight + 1 ||
+                     el.scrollWidth > box.clientWidth + 1;
+      if (!overflow || size <= 58) break;
+      size *= 0.972;
+      el.style.fontSize = size + 'px';
+    }
+    // collapse the measuring box so the deck sits right under the headline
+    box.style.height = el.scrollHeight + 'px';
+    document.documentElement.setAttribute('data-fit', String(size.toFixed(1)));
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fit);
+  } else {
+    fit();
+  }
+  window.addEventListener('load', fit);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "template": "slide_text",
+  "out": "ai-engineering-in-5-slides.png",
+  "photo": {
+    "src": "assets/photos/c_Jules.jpg",
+    "crop": [
+      0.08,
+      0.13,
+      0.92,
+      0.55
+    ],
+    "background": "dark"
+  },
+  "width": 1080,
+  "height": 1350,
+  "copy": {
+    "rail_left": "Field Notes",
+    "rail_mid": "2026",
+    "stamp": "01 / 05",
+    "kicker": "A practical guide for builders",
+    "title": "AI Engineering in 5 Slides",
+    "deck": "Most teams can ship a demo. Few build a system \u2014 the difference lives in five layers, and every one of them is an engineering problem.",
+    "index_head": "In this set",
+    "index": [
+      "Models",
+      "Context",
+      "Evals",
+      "Agents",
+      "Cost"
+    ],
+    "bar_lead": "Most teams can ship a demo.",
+    "bar_sub": "A practical guide for builders",
+    "swipe": "Swipe"
+  }
+}

@@ -1,104 +1,135 @@
 # poster-gen
 
-Code-rendered social posters in the editorial collage style — electric field colour,
-condensed display type, duotone classical bust, halftone + scanline texture.
+Code-rendered social posters. Write content, optionally point at a reference image,
+get a 1080×1350 poster in `out/` (plus a ready-to-upload JPG).
 
-Give it a reference image and it adopts that colourway; give it copy and it renders
-a 1080×1350 poster (plus a ready-to-upload JPG) into `out/`.
+Two things adapt to what you write:
+
+- **Typography** — the headline is measured in the browser and shrunk until it fits,
+  so titles of any length work.
+- **Visual theme** — a keyword matcher picks a palette, a figure and a texture set
+  from `themes/`, so a finance post does not look like a tech post.
 
 No image model is involved. The photo layer is a real photograph that gets keyed,
-duotoned and re-composited with CSS; everything else is type and vector, so the
-output stays sharp at any size.
+duotoned and re-composited with CSS; everything else is type and vector.
 
 ## Setup
 
 ```bash
-uv sync          # creates .venv with Python 3.14 (pinned in .python-version)
+uv sync          # .venv on Python 3.14 (pinned in .python-version)
 ```
 
-## Use
+## Make a poster from content
 
 ```bash
-# render every spec in specs/
-uv run poster build
-
-# render one spec
-uv run poster build specs/slide-01.json
-
-# adopt the palette of a reference image, then render
-uv run poster build --from-ref references/my-reference.jpg
-
-# just extract a palette (writes styles/<name>.json)
-uv run poster style references/my-reference.jpg
-
-# key a new photo into a duotone cutout
-uv run poster photo path/to/shot.jpg -o assets/photos/cut.png --crop 0.1,0.1,0.9,0.6
+uv run poster make content/ai-engineering.md
+uv run poster make content/pricing-leaks.md --ref references/some-poster.jpg
+uv run poster make content/ai-engineering.md --theme culture --out my-post
+uv run poster themes          # list available themes
 ```
 
-Outputs land in `out/`:
+Output: `out/<slug>.png` (2160×2700) + `out/<slug>-1080.jpg`, and the resolved
+spec is saved to `specs/<slug>.json` so the render is reproducible.
 
-| file | size | use |
+### Content format
+
+Either markdown or `key: value`. Both of these work:
+
+```markdown
+# AI Engineering in 5 Slides
+
+A practical guide for builders
+
+- Models
+- Context
+- Evals
+- Agents
+- Cost
+
+Most teams can ship a demo. Few build a system.
+```
+
+```text
+title: AI Engineering in 5 Slides
+kicker: A practical guide for builders
+list: Models, Context, Evals, Agents, Cost
+deck: Most teams can ship a demo. Few build a system.
+```
+
+A short first paragraph is treated as the subtitle; the rest becomes body copy.
+Bullets become the numbered chip list. Nothing is mandatory except a title.
+
+### How the theme is chosen
+
+Each file in `themes/` declares keywords. The title counts triple, the kicker double,
+the deck and list once. Highest score wins; no match falls back to `tech`.
+
+| theme | direction | figure |
 |---|---|---|
-| `slide-01-ai-engineering.png` | 2160×2700 | master, retina/print |
-| `slide-01-ai-engineering-1080.jpg` | 1080×1350 | Instagram / LinkedIn upload |
+| `tech` | electric blue / lime | Caesar bust |
+| `finance` | deep green / gold | Cicero bust |
+| `culture` | oxblood / cream | Diocletian bust |
+| `science` | teal / amber | Diocletian bust |
 
-## How a render works
-
-1. `specs/*.json` holds the copy, the photo reference and the style to use.
-2. `styles/*.json` holds four colours (`bg`, `accent`, `ink`, `paper`) plus texture
-   strength. Readable text/line colours are derived from those at render time, so a
-   light palette flips the type to dark automatically.
-3. The photo is re-keyed into the palette (cached in `assets/photos/cache/`).
-4. `templates/slide01.html` is filled with the copy + inlined fonts/images, then
-   screenshotted by headless Chrome at 2×.
-
-## Adding a slide
-
-Copy a spec and change the copy — no CSS needed:
-
-```bash
-cp specs/slide-01.json specs/slide-02.json
-$EDITOR specs/slide-02.json   # change "out", "copy", and the photo if you like
-uv run poster build specs/slide-02.json
-```
-
-Spec fields: `template`, `out`, `photo`, `style`, `width`, `height`, and `copy`
-(any key in `copy` becomes a `{{TOKEN}}` in the template; `index` is a list of
-strings rendered as the numbered contents list).
+A theme supplies `bg`, `accent`, `ink`, `paper`, grain + scanline strength, and which
+photograph to key. Text colours are derived from the palette, so a light background
+flips the type to dark automatically.
 
 ## Reference images
 
-Drop anything you like the look of into `references/` and run
-`uv run poster build --from-ref references/that.jpg`. The palette is extracted with
-a quantised histogram, so small accents (a lime chip, a red stamp) survive next to a
-large flat background.
+```bash
+uv run poster make content/x.md --ref references/that.jpg   # borrow the palette
+uv run poster style references/that.jpg                     # just extract a palette
+```
 
-What transfers automatically: background, accent, ink and paper colours, the type
-colour flip, the duotone of the photo, grain strength.
+Palette extraction uses a quantised histogram, so small accents (a lime chip, a red
+stamp) survive next to a large flat background. A reference overrides the theme's
+colours but keeps its figure and texture.
 
-What does **not** transfer: layout and type treatment. Those live in the template —
-different compositions (full-bleed photo panels, chip grids, split layouts) are
-added as new files in `templates/` and selected per spec via `"template"`.
+## Other commands
+
+```bash
+uv run poster build                          # re-render every spec in specs/
+uv run poster build specs/slide-01.json      # one spec
+uv run poster photo shot.jpg -o cut.png --crop 0.1,0.1,0.9,0.6   # key a photo
+```
+
+## Templates
+
+- `templates/slide_text.html` — the generic layout used by `make`: auto-fitted
+  headline, deck, chip list, figure, footer bar.
+- `templates/slide01.html` — the hand-tuned cover (the "AI / ENGINEERING / in 5 SLIDES"
+  stack). Fixed sizes, so use it only for content shaped like that.
+
+## What is automatic, and what is not
+
+Automatic: palette, figure, texture, headline fitting, deck/chip layout, JPG export.
+
+Not automatic: composition. Both templates place text left and the figure bottom-right.
+If a reference has a fundamentally different layout (full-bleed photo, split panels,
+chip grid), that needs a new template file — the colour/photo/copy pipeline will then
+work with it unchanged.
 
 ## Layout
 
 ```
 src/poster_gen/
-  cli.py       build / style / photo commands
+  cli.py       make / build / style / photo / themes
+  content.py   content file -> copy tokens
+  theme.py     keyword scoring -> theme
   render.py    template fill + headless Chrome screenshot
   palette.py   reference image -> palette + derived text colours
   photo.py     luminance keying -> duotone cutout
-templates/     HTML/CSS layouts (slide01.html)
-specs/         one JSON per poster
-styles/        palettes (default.json)
-assets/fonts/  Anton, Bebas Neue, Archivo Black, Barlow Condensed, Playfair Italic
-assets/photos/ source photographs (+ cache/)
+templates/     HTML/CSS layouts
+themes/        palette + figure + texture per subject
+content/       example content files
+specs/         one JSON per rendered poster
+assets/        fonts, source photos, key cache
 references/    drop reference images here
 out/           rendered posters
 ```
 
 ## Credits
 
-Fonts are SIL Open Font License (Google Fonts). The bust of Julius Caesar is a
-public-domain photograph from Wikimedia Commons. Swap in your own photography for
-commercial work.
+Fonts are SIL Open Font License (Google Fonts). The busts are public-domain
+photographs from Wikimedia Commons. Swap in your own photography for commercial work.

@@ -1,0 +1,35 @@
+{
+  "template": "slide_text",
+  "out": "why-most-pricing-pages-leak-revenue.png",
+  "photo": {
+    "src": "assets/photos/c_Ciceron.jpg",
+    "crop": [
+      0.08,
+      0.1,
+      0.92,
+      0.52
+    ],
+    "background": "dark"
+  },
+  "width": 1080,
+  "height": 1350,
+  "copy": {
+    "rail_left": "Field Notes",
+    "rail_mid": "2026",
+    "stamp": "01 / 05",
+    "kicker": "A teardown for founders who price on vibes",
+    "title": "Why Most Pricing Pages Leak Revenue",
+    "deck": "Most companies price once and never revisit it. The leak is rarely the number \u2014 it is the packaging around it, and the discounts that quietly reset your floor.",
+    "index_head": "In this set",
+    "index": [
+      "Anchoring",
+      "Packaging",
+      "Discounts",
+      "Expansion",
+      "Renewals"
+    ],
+    "bar_lead": "Most companies price once and never revisit it.",
+    "bar_sub": "A teardown for founders who price on vibes",
+    "swipe": "Swipe"
+  }
+}
