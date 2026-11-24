@@ -1,0 +1,12 @@
+{
+  "name": "default",
+  "source": "hand-tuned from the reference collage",
+  "bg": "#1B2FF0",
+  "accent": "#D9FF3D",
+  "ink": "#070B33",
+  "paper": "#F2EFE6",
+  "text": "#FFFFFF",
+  "palette": ["#1B2FF0", "#0A1268", "#F2EFE6", "#D9FF3D", "#3352FF", "#070B33"],
+  "grain": 0.28,
+  "scanlines": 0.22
+}

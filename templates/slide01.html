@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AI Engineering in 5 Slides — 01</title>
+<style>
+{{FONTS}}
+
+:root{
+  --blue:{{BLUE}};
+  --blue-hi:#3352FF;
+  --blue-deep:#0A1268;
+  --navy:{{NAVY}};
+  --paper:{{PAPER}};
+  --text:{{TEXT}};
+  --text-soft:{{TEXT_SOFT}};
+  --line:{{LINE}};
+  --on-accent:{{ON_ACCENT}};
+  --fig-lo:color-mix(in srgb, var(--blue) 58%, var(--navy));
+  --fig-hi:var(--text);
+  --fig-mid:color-mix(in srgb, var(--fig-lo) 40%, var(--fig-hi));
+  --lime:{{LIME}};
+  --accent:{{LIME}};
+  --shadow:{{SHADOW}};
+  --text-mute:{{TEXT_MUTE}};
+  --w:1080px;
+  --h:1350px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:var(--w);height:var(--h);}
+body{
+  background:var(--blue);
+  font-family:"Barlow Condensed",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+.stage{
+  position:relative;
+  width:var(--w);height:var(--h);
+  overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 18% 8%, color-mix(in srgb, var(--blue) 76%, white) 0%, transparent 55%),
+    radial-gradient(100% 70% at 88% 92%, color-mix(in srgb, var(--blue) 55%, black) 0%, transparent 60%),
+    linear-gradient(168deg, color-mix(in srgb, var(--blue) 88%, white) 0%, var(--blue) 45%, color-mix(in srgb, var(--blue) 84%, black) 100%);
+}
+
+/* ---------- texture ---------- */
+.grain{
+  position:absolute;inset:0;z-index:9;pointer-events:none;
+  opacity:{{GRAIN}};mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='240' height='240' filter='url(%23n)' opacity='.5'/></svg>");
+}
+.dots{
+  position:absolute;z-index:2;pointer-events:none;
+  left:-40px;bottom:150px;width:520px;height:560px;
+  opacity:.30;
+  background-image:radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--text) 60%, transparent) 1.1px, transparent 1.4px);
+  background-size:9px 9px;
+  -webkit-mask-image:linear-gradient(120deg,#000 20%,transparent 78%);
+}
+
+/* ---------- cover index ---------- */
+.index{
+  position:absolute;z-index:7;right:62px;top:186px;width:286px;
+  text-align:right;
+  font-family:"Bebas Neue";text-transform:uppercase;
+}
+.idx-head{
+  font-size:16px;letter-spacing:.34em;color:var(--text-mute);
+  padding-bottom:9px;border-bottom:1px solid var(--line);
+  margin-bottom:12px;
+}
+.idx-row{
+  display:flex;justify-content:flex-end;align-items:baseline;gap:12px;
+  font-size:19px;letter-spacing:.2em;color:var(--text-soft);
+  line-height:1.62;
+}
+.idx-row .n{font-size:15px;letter-spacing:.1em;color:var(--accent);opacity:.9;}
+
+/* ---------- wires ---------- */
+.wires{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.55;}
+
+/* ---------- bust ---------- */
+.bust-wrap{
+  position:absolute;z-index:3;
+  right:-190px;bottom:-235px;
+  width:985px;aspect-ratio:{{PHOTO_AR}};
+}
+/* duotone cutout, re-keyed per palette at build time */
+.bust-wrap img{width:100%;display:block;
+  filter:contrast(1.03) drop-shadow(0 26px 48px var(--shadow));
+}
+.scan{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,{{SCAN}}) 0 2px, rgba(6,10,60,0) 2px 7px);
+  -webkit-mask-image:url("{{PHOTO}}");
+  -webkit-mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat;
+  mix-blend-mode:multiply;
+}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:absolute;z-index:8;left:60px;right:60px;top:52px;
+  display:flex;align-items:center;gap:16px;
+  font-size:19px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text-soft);
+}
+.topbar .brand{font-weight:700;}
+.topbar .rule{flex:1;height:1px;background:var(--line);}
+.topbar .stamp{
+  font-family:"Bebas Neue";font-size:20px;letter-spacing:.16em;
+  padding:5px 11px 4px;background:var(--accent);color:var(--on-accent);
+}
+
+/* ---------- headline ---------- */
+.copy{position:absolute;z-index:7;left:60px;top:148px;width:960px;}
+
+.kicker{
+  display:flex;align-items:center;gap:11px;
+  font-size:23px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);
+}
+.kicker .sq{width:11px;height:11px;background:var(--accent);display:block;}
+
+h1{font-family:"Anton";color:var(--text);text-transform:uppercase;}
+.l1{
+  display:flex;align-items:flex-end;gap:44px;
+  font-size:252px;line-height:.78;letter-spacing:-.015em;
+  margin-top:64px;
+}
+.l1 .idx{
+  font-family:"Bebas Neue";font-size:25px;letter-spacing:.26em;
+  color:var(--text-soft);line-height:1.5;
+  padding-bottom:34px;border-left:2px solid var(--line);padding-left:20px;
+  max-width:230px;
+  text-transform:uppercase;
+}
+.l2{
+  display:block;font-size:186px;line-height:.8;letter-spacing:-.005em;
+  margin-top:26px;
+  text-shadow:0 8px 0 var(--shadow);
+}
+.l3{
+  display:flex;align-items:center;gap:22px;
+  font-size:150px;line-height:.86;letter-spacing:-.005em;margin-top:26px;
+}
+.l3 em{
+  font-family:"Playfair Display";font-style:italic;font-weight:500;
+  text-transform:lowercase;font-size:104px;letter-spacing:0;
+  color:var(--paper);padding-right:6px;
+}
+.l3 .five{
+  font-size:132px;line-height:1;
+  color:var(--on-accent);
+  background:var(--accent);
+  padding:13px 22px 0 26px;
+  display:inline-block;
+  transform:translateY(-6px) rotate(-2deg);
+}
+
+/* ---------- deck ---------- */
+.deck{
+  position:absolute;z-index:7;left:60px;top:800px;width:452px;
+  font-family:"Liberation Sans",Arial,sans-serif;
+  font-size:21px;line-height:1.58;letter-spacing:.002em;
+  color:var(--text-soft);
+}
+.deck b{color:var(--text);font-weight:700;}
+.deck .accent{
+  display:block;margin-bottom:14px;
+  font-family:"Bebas Neue";font-size:18px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--accent);
+}
+
+/* ---------- bottom bar ---------- */
+.bar{
+  position:absolute;z-index:8;left:0;right:0;bottom:0;height:172px;
+  background:var(--navy);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 60px;
+}
+.bar .lead{
+  font-family:"Bebas Neue";font-size:33px;letter-spacing:.035em;
+  color:var(--paper);line-height:1.1;
+}
+.bar .sub{
+  margin-top:9px;font-size:20px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(217,255,61,.92);font-weight:700;
+}
+.bar .swipe{
+  display:flex;align-items:center;gap:14px;
+  font-family:"Bebas Neue";font-size:26px;letter-spacing:.2em;
+  color:var(--accent);text-transform:uppercase;
+}
+.bar .swipe .arrow{
+  width:64px;height:64px;border:2px solid var(--accent);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:Arial;font-size:26px;line-height:1;color:var(--accent);
+}
+
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="index">
+    <div class="idx-head">{{INDEX_HEAD}}</div>
+    {{INDEX_ITEMS}}
+  </div>
+  <div class="dots"></div>
+
+  <svg class="wires" viewBox="0 0 1080 1350" fill="none">
+    <path d="M-40 470 C 210 300, 380 700, 640 560 S 980 250, 1160 420"
+          stroke="color-mix(in srgb, var(--text) 34%, transparent)" stroke-width="2.5"/>
+    <path d="M-60 760 C 180 620, 300 980, 560 900 S 900 640, 1140 780"
+          stroke="color-mix(in srgb, var(--text) 22%, transparent)" stroke-width="2"/>
+    <path d="M700 -40 C 720 240, 980 260, 960 520 S 760 760, 880 980"
+          stroke="color-mix(in srgb, var(--text) 18%, transparent)" stroke-width="1.6"/>
+  </svg>
+
+  <div class="bust-wrap">
+    <img src="{{PHOTO}}" alt="">
+    <div class="scan"></div>
+  </div>
+
+  <div class="topbar">
+    <div class="brand">{{RAIL_LEFT}}</div>
+    <div class="rule"></div>
+    <div>{{RAIL_MID}}</div>
+    <div class="stamp">{{STAMP}}</div>
+  </div>
+
+  <div class="copy">
+    <div class="kicker"><span class="sq"></span>{{KICKER}}</div>
+
+    <h1>
+      <span class="l1">{{H1_A}}<span class="idx">{{MICRO}}</span></span>
+      <span class="l2">{{H1_B}}</span>
+      <span class="l3"><em>{{H1_IN}}</em><span class="five">{{H1_NUM}}</span>{{H1_C}}</span>
+    </h1>
+  </div>
+
+
+  <div class="deck">
+    <span class="accent">{{DECK_TAG}}</span>
+    {{DECK}}
+  </div>
+
+  <div class="bar">
+    <div>
+      <div class="lead">{{BAR_LEAD}}</div>
+      <div class="sub">{{BAR_SUB}}</div>
+    </div>
+    <div class="swipe">{{SWIPE}}<span class="arrow">→</span></div>
+  </div>
+
+  <div class="grain"></div>
+</div>
+</body>
+</html>

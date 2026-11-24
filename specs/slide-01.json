@@ -1,0 +1,31 @@
+{
+  "template": "slide01",
+  "out": "slide-01-ai-engineering.png",
+  "photo": {
+    "src": "assets/photos/c_Jules.jpg",
+    "crop": [0.08, 0.13, 0.92, 0.55],
+    "background": "dark"
+  },
+  "style": "styles/default.json",
+  "width": 1080,
+  "height": 1350,
+  "copy": {
+    "rail_left": "Field Notes",
+    "rail_mid": "Vol. 01 · 2026",
+    "stamp": "01 / 05",
+    "kicker": "A practical guide for builders",
+    "h1_a": "AI",
+    "micro": "The<br>engineering<br>shift",
+    "h1_b": "Engineering",
+    "h1_in": "in",
+    "h1_num": "5",
+    "h1_c": "Slides",
+    "index_head": "In this set",
+    "index": ["Models", "Context", "Evals", "Agents", "Cost"],
+    "deck_tag": "Start here",
+    "deck": "Most teams can ship a <b>demo</b>. Few build a <b>system</b> — the difference lives in five layers, and every one of them is an engineering problem.",
+    "bar_lead": "Five things that separate a demo<br>from a system in production.",
+    "bar_sub": "A five-part field guide &nbsp;·&nbsp; 2026",
+    "swipe": "Swipe"
+  }
+}
